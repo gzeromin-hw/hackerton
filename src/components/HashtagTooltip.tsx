@@ -29,7 +29,7 @@ export const HashtagTooltip = ({
   const remainingCount = hashtags.length - maxCount
 
   return (
-    <div className="relative">
+    <div className="relative flex items-start">
       <span
         className="badge badge-soft badge-sm cursor-pointer"
         onMouseEnter={() => setShowTooltip(true)}
@@ -60,4 +60,3 @@ export const HashtagTooltip = ({
     </div>
   )
 }
-

@@ -91,7 +91,7 @@ export default function MainPage() {
       className={clsx(
         'bg-base-100 min-h-screen',
         'flex flex-col items-center',
-        'py-28',
+        'pt-28 pb-8',
       )}
     >
       <div className="flex w-full flex-col items-center gap-4">

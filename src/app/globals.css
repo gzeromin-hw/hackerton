@@ -100,6 +100,30 @@ body {
 }
 
 :root {
-  --home-panel-height: 18rem;
-  --card-height: 18rem;
+  --home-panel-height: 20rem;
+  --card-height: 19rem;
+}
+
+/* rem 배율 정의: base 레이어에서 잡아주기 */
+@layer base {
+  /* 일반 */
+  @media (-webkit-min-device-pixel-ratio: 1) {
+    :root {
+      font-size: 16px;
+    }
+  }
+
+  /* 레티나 디스플레이(Mac)  */
+  @media (-webkit-min-device-pixel-ratio: 2) {
+    :root {
+      font-size: 13px;
+    }
+  }
+
+  /* 초고해상도 모바일/모니터  */
+  @media (-webkit-min-device-pixel-ratio: 3) {
+    :root {
+      font-size: 12px;
+    }
+  }
 }
