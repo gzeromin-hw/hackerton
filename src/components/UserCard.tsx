@@ -216,6 +216,7 @@ export const UserCard = ({
           >
             <img
               src={
+                userCard.profile_image_path ||
                 'https://img.daisyui.com/images/profile/demo/yellingcat@192.webp'
               }
               alt={userCard.name}
@@ -250,7 +251,7 @@ export const UserCard = ({
               {userCard.can_edit && (
                 <button
                   onClick={handleEditClick}
-                  className={clsx('btn btn-neutral btn-xs', 'shrink-0')}
+                  className={clsx('btn btn-accent btn-xs', 'shrink-0')}
                 >
                   수정하기
                 </button>

@@ -35,9 +35,10 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
     <form
       onSubmit={handleSubmit}
       className={clsx(
-        'w-full max-w-4xl rounded-lg border p-4 transition-colors',
-        'flex items-end gap-3',
-        'border-base-300 bg-base-100 focus-within:border-primary',
+        'w-full max-w-4xl rounded-2xl border px-4 py-1',
+        'flex items-center gap-3 transition-colors',
+        'border-base-300 bg-base-100',
+        'focus-within:border-primary',
       )}
     >
       <textarea
@@ -51,13 +52,18 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
         className={clsx(
           'textarea textarea-ghost flex-1 resize-none',
           'text-base-content placeholder-base-content/60',
-          'border-none bg-transparent text-base',
+          'min-h-0 border-none bg-transparent text-base',
           'focus:bg-transparent focus:outline-none',
         )}
       />
       <button
         type="submit"
-        className="btn btn-primary btn-square"
+        className={clsx(
+          'btn btn-primary btn-sm rounded-full',
+          'h-8 min-h-0 w-8 p-0',
+          'flex items-center justify-center',
+          'disabled:opacity-50',
+        )}
         disabled={!input.trim()}
       >
         <svg
@@ -68,7 +74,7 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="h-5 w-5"
+          className="h-4 w-4"
         >
           <path d="M22 2L11 13" />
           <path d="M22 2l-7 20-4-9-9-4 20-7z" />

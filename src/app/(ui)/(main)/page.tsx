@@ -61,6 +61,7 @@ export default function MainPage() {
         hashtags: homeData.my_profile_card.hashtags,
         is_leader: homeData.my_profile_card.is_leader,
         can_edit: homeData.my_profile_card.can_edit,
+        profile_image_path: homeData.my_profile_card.profile_image_path,
       }
     : null
 
@@ -71,6 +72,9 @@ export default function MainPage() {
         org_path: homeData.my_team_card.org_path,
         summary: homeData.my_team_card.summary,
         hashtags: homeData.my_team_card.hashtags,
+        leader_id: homeData.my_team_card.leader_id,
+        leader_name: homeData.my_team_card.leader_name,
+        can_edit: homeData.my_team_card.can_edit,
       }
     : null
 
@@ -87,11 +91,21 @@ export default function MainPage() {
         'flex flex-col items-center justify-center',
       )}
     >
-      <ChatInput onSubmit={handleMessageSubmit} />
+      <div className="flex w-full flex-col items-center gap-5">
+        <h2
+          className={clsx(
+            'text-base-content text-4xl font-bold',
+            'tracking-tight',
+          )}
+        >
+          어떤 업무를 찾고 계신가요?
+        </h2>
+        <ChatInput onSubmit={handleMessageSubmit} />
+      </div>
       <div
         className={clsx(
           'flex flex-nowrap items-stretch justify-center gap-4',
-          'mt-8 w-full max-w-6xl overflow-x-auto px-4',
+          'mt-16 w-full max-w-6xl overflow-x-auto px-4',
         )}
       >
         {/* Section 1 실시간 검색어 나타내주는 패널 */}

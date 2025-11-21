@@ -15,9 +15,9 @@ export interface TeamCardDto {
   org_path: string
   summary: string
   hashtags: Array<HashtagDto>
-  leader_id?: number
-  leader_name?: string
-  can_edit?: boolean
+  leader_id: number
+  leader_name: string
+  can_edit: boolean
 }
 
 /**
@@ -32,4 +32,5 @@ export interface UserCardDto {
   hashtags: Array<HashtagDto>
   is_leader: boolean
   can_edit: boolean
+  profile_image_path: string | null
 }

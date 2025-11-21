@@ -119,7 +119,7 @@ export const OrganizationCard = ({
             {canEdit && (
               <button
                 onClick={handleEditClick}
-                className={clsx('btn btn-neutral btn-xs', 'shrink-0')}
+                className={clsx('btn btn-accent btn-xs', 'shrink-0')}
               >
                 수정하기
               </button>
