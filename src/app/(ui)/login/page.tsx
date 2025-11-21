@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/data/authStore'
 import { useToastStore } from '@/data/toastStore'
 import hallucinationsClient from '@/services/apis/hallucinations.client'
+import clsx from 'clsx'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -69,12 +70,29 @@ export default function LoginPage() {
 
   if (cleverseAuth.isAuthenticated && cleverseUser) {
     return (
-      <div className="bg-base-100 flex min-h-screen flex-col items-center justify-center px-4 py-8">
-        <div className="w-full max-w-md">
+      <div
+        className={clsx(
+          'flex min-h-screen flex-col items-center',
+          'justify-center px-4 py-8',
+        )}
+      >
+        <div
+          className={clsx(
+            'w-full max-w-md rounded-2xl',
+            'bg-base-100/80 p-8 shadow-2xl',
+            'backdrop-blur-xl transition-all duration-300',
+          )}
+        >
           <div className="mb-8 text-center">
-            <div className="bg-success mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full">
+            <div
+              className={clsx(
+                'mb-4 inline-flex h-16 w-16 items-center',
+                'bg-success justify-center rounded-full',
+                'shadow-lg transition-transform hover:scale-110',
+              )}
+            >
               <svg
-                className="text-success-content h-6 w-6"
+                className="text-success-content h-8 w-8"
                 fill="none"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -85,15 +103,18 @@ export default function LoginPage() {
                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h2 className="text-base-content mb-2 text-xl font-semibold">
+            <h2 className={clsx('text-base-content mb-2 text-2xl font-bold')}>
               로그인 완료
             </h2>
-            <p className="text-base-content/60 text-sm">
+            <p className="text-base-content/70 text-sm">
               {cleverseUser.userName || cleverseUser.userId}님 환영합니다
             </p>
           </div>
           <button
-            className="btn btn-primary w-full"
+            className={clsx(
+              'btn btn-primary w-full rounded-xl',
+              'transition-all duration-200 hover:scale-[1.02]',
+            )}
             onClick={() => router.push('/')}
           >
             메인으로 이동
@@ -104,23 +125,70 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="bg-base-100 flex min-h-screen flex-col items-center justify-center px-4 py-8">
-      <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
-          <h1 className="text-base-content mb-2 text-2xl font-semibold">
-            Log in to your account
+    <div
+      className={clsx(
+        'relative flex min-h-screen flex-col items-center',
+        'justify-center overflow-hidden px-4 py-8',
+      )}
+    >
+      {/* 메인 로그인 카드 */}
+      <div
+        className={clsx(
+          'relative z-10 w-full max-w-md rounded-2xl',
+          'bg-base-100/90 p-8 shadow-2xl',
+          'backdrop-blur-xl transition-all duration-300',
+        )}
+        style={{
+          animation: 'fadeInUp 0.5s ease-out',
+        }}
+      >
+        <div className="mb-10 text-center">
+          <div
+            className={clsx(
+              'mb-6 inline-flex h-14 w-14 items-center',
+              'justify-center rounded-2xl bg-linear-to-br',
+              'from-primary to-primary/80 shadow-lg',
+            )}
+          >
+            <svg
+              className="text-primary-content h-7 w-7"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+          <h1 className={clsx('text-base-content mb-2 text-3xl font-bold')}>
+            로그인
           </h1>
+          <p className="text-base-content/60 mb-1 text-sm">
+            AI 기반 조직 정보 검색 플랫폼
+          </p>
+          <p className="text-primary text-xs font-medium">
+            자연어로 찾는 스마트 검색
+          </p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div className="form-control">
-            <label htmlFor="ssoId" className="label">
-              <span className="label-text">ID</span>
+            <label htmlFor="ssoId" className={clsx('label pb-2')}>
+              <span
+                className={clsx(
+                  'label-text text-sm font-medium',
+                  'text-base-content/80',
+                )}
+              >
+                ID
+              </span>
             </label>
             <input
               id="ssoId"
               type="text"
-              placeholder="Enter your SSO ID"
+              placeholder="SSO ID를 입력하세요"
               value={login.ssoId}
               onChange={e =>
                 setLogin({
@@ -128,18 +196,30 @@ export default function LoginPage() {
                   ssoId: e.target.value,
                 })
               }
-              className="input input-bordered w-full"
+              className={clsx(
+                'input input-bordered h-12 w-full rounded-xl',
+                'border-base-300 bg-base-100 transition-all',
+                'focus:border-primary duration-200 focus:outline-none',
+                'focus:ring-primary/20 focus:ring-2',
+              )}
             />
           </div>
 
           <div className="form-control">
-            <label htmlFor="password" className="label">
-              <span className="label-text">Password</span>
+            <label htmlFor="password" className={clsx('label pb-2')}>
+              <span
+                className={clsx(
+                  'label-text text-sm font-medium',
+                  'text-base-content/80',
+                )}
+              >
+                비밀번호
+              </span>
             </label>
             <input
               id="password"
               type="password"
-              placeholder="Enter your password"
+              placeholder="비밀번호를 입력하세요"
               value={login.password}
               onChange={e =>
                 setLogin({
@@ -152,19 +232,29 @@ export default function LoginPage() {
                   handleLogin()
                 }
               }}
-              className="input input-bordered w-full"
+              className={clsx(
+                'input input-bordered h-12 w-full rounded-xl',
+                'border-base-300 bg-base-100 transition-all',
+                'focus:border-primary duration-200 focus:outline-none',
+                'focus:ring-primary/20 focus:ring-2',
+              )}
             />
           </div>
 
           <button
-            className="btn btn-primary w-full"
+            className={clsx(
+              'btn btn-primary h-12 w-full rounded-xl',
+              'text-base font-semibold shadow-lg',
+              'transition-all duration-200 hover:scale-[1.02]',
+              'hover:shadow-xl disabled:opacity-50',
+            )}
             onClick={handleLogin}
             disabled={loginLoading}
           >
             {loginLoading ? (
-              <span className="loading loading-spinner"></span>
+              <span className="loading loading-spinner loading-md"></span>
             ) : (
-              'Log In'
+              '로그인'
             )}
           </button>
         </div>

@@ -3,7 +3,7 @@ import '../globals.css'
 import ToastContainer from '@/components/ToastContainer'
 
 export const metadata: Metadata = {
-  title: '할루시네이션즈',
+  title: 'Roltimate',
   description: '할네즈 해커톤',
 }
 

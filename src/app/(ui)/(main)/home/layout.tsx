@@ -51,7 +51,7 @@ export default function HomeLayout({
   const sidebarWidthPx = `${sidebarWidth}px`
 
   return (
-    <div>
+    <div className="bg-pattern-grid">
       <div
         className={clsx(
           'pt-16 transition-all duration-300',

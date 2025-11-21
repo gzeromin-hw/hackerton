@@ -6,7 +6,7 @@ export default function MainLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="bg-base-100 min-h-screen">
+    <div className="bg-pattern-grid min-h-screen">
       <Header />
       {children}
     </div>

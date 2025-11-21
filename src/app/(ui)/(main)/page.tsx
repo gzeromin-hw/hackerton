@@ -89,7 +89,7 @@ export default function MainPage() {
   return (
     <div
       className={clsx(
-        'bg-base-100 min-h-screen',
+        'min-h-screen',
         'flex flex-col items-center',
         'pt-36 pb-8',
       )}

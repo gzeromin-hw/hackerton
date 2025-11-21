@@ -39,7 +39,7 @@ export default function Home() {
   }
 
   return (
-    <div className={clsx('bg-base-100 min-h-screen p-6')}>
+    <div className={clsx('min-h-screen p-6')}>
       <div className={clsx('mx-auto max-w-7xl space-y-8')}>
         {isLoading ? (
           <div

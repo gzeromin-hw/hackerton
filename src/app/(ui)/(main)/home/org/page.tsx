@@ -226,7 +226,7 @@ function OrgDetailContent() {
 
   if (loading) {
     return (
-      <div className={clsx('bg-base-100 min-h-screen p-6')}>
+      <div className={clsx('min-h-screen p-6')}>
         <div className={clsx('mx-auto max-w-4xl')}>
           <p>로딩 중...</p>
         </div>
@@ -236,7 +236,7 @@ function OrgDetailContent() {
 
   if (error) {
     return (
-      <div className={clsx('bg-base-100 min-h-screen p-6')}>
+      <div className={clsx('min-h-screen p-6')}>
         <div className={clsx('mx-auto max-w-4xl')}>
           <p className={clsx('text-error')}>{error}</p>
         </div>
@@ -246,7 +246,7 @@ function OrgDetailContent() {
 
   if (!orgId || !organization || !teamData) {
     return (
-      <div className={clsx('bg-base-100 min-h-screen p-6')}>
+      <div className={clsx('min-h-screen p-6')}>
         <div className={clsx('mx-auto max-w-4xl')}>
           <p>조직 ID가 제공되지 않았습니다.</p>
         </div>
@@ -255,7 +255,7 @@ function OrgDetailContent() {
   }
 
   return (
-    <div className={clsx('bg-base-100 min-h-screen p-6')}>
+    <div className={clsx('min-h-screen p-6')}>
       <div className={clsx('mx-auto max-w-4xl space-y-6')}>
         {/* 뒤로가기 버튼 */}
         <button
@@ -431,7 +431,7 @@ export default function OrgPage() {
   return (
     <Suspense
       fallback={
-        <div className={clsx('bg-base-100 min-h-screen p-6')}>
+        <div className={clsx('min-h-screen p-6')}>
           <div className={clsx('mx-auto max-w-4xl')}>
             <p>로딩 중...</p>
           </div>
