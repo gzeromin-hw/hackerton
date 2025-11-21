@@ -18,6 +18,7 @@ export interface OrganizationCardProps {
   /** 컴팩트 모드 (간소화된 정보 표시) */
   compact?: boolean
   className?: string
+  variant?: 'default' | 'home'
 }
 
 /**
@@ -29,6 +30,7 @@ export const OrganizationCard = ({
   size = 'md',
   compact = false,
   className,
+  variant = 'default',
 }: OrganizationCardProps) => {
   const router = useRouter()
   const { cleverseAuth } = useAuthStore()
@@ -73,7 +75,8 @@ export const OrganizationCard = ({
       className={clsx(
         'card bg-base-100 border-base-300 border shadow-md',
         'flex flex-col justify-between gap-4',
-        'h-(--card-height) transition-shadow hover:shadow-lg',
+        'transition-shadow hover:shadow-lg',
+        variant === 'home' ? '' : 'h-(--card-height)',
         'cursor-pointer',
         sizeClasses[size],
         className,

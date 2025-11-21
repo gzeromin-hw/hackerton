@@ -91,10 +91,10 @@ export default function MainPage() {
       className={clsx(
         'bg-base-100 min-h-screen',
         'flex flex-col items-center',
-        'pt-28 pb-8',
+        'pt-36 pb-8',
       )}
     >
-      <div className="flex w-full flex-col items-center gap-4">
+      <div className="flex w-full flex-col items-center gap-5">
         <h2
           className={clsx(
             'text-base-content text-4xl font-bold',
@@ -108,7 +108,7 @@ export default function MainPage() {
       <div
         className={clsx(
           'flex flex-nowrap items-stretch justify-center gap-5',
-          'mt-8 w-full max-w-6xl px-4',
+          'mt-12 w-full max-w-6xl px-4',
         )}
       >
         {/* Section 1 실시간 검색어 나타내주는 패널 */}
@@ -140,12 +140,12 @@ export default function MainPage() {
         >
           {currentUserCard && (
             <div className="w-full md:w-1/2">
-              <UserCard userCard={currentUserCard} />
+              <UserCard userCard={currentUserCard} variant="home" />
             </div>
           )}
           {currentTeamCard && (
             <div className="w-full md:w-1/2">
-              <OrganizationCard teamCard={currentTeamCard} />
+              <OrganizationCard teamCard={currentTeamCard} variant="home" />
             </div>
           )}
         </div>

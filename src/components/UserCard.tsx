@@ -19,6 +19,7 @@ export interface UserCardProps {
   compact?: boolean
   /** 카드 클래스 */
   className?: string
+  variant?: 'default' | 'home'
 }
 
 /**
@@ -30,6 +31,7 @@ export const UserCard = ({
   size = 'md',
   compact = false,
   className,
+  variant = 'default',
 }: UserCardProps) => {
   const router = useRouter()
   const hashtagContainerRef = useRef<HTMLDivElement>(null)
@@ -198,8 +200,9 @@ export const UserCard = ({
       className={clsx(
         'card bg-base-100 border-base-300 border shadow-md',
         'flex flex-col justify-between gap-4',
-        'h-(--card-height) transition-shadow hover:shadow-lg',
+        'transition-shadow hover:shadow-lg',
         'cursor-pointer',
+        variant === 'home' ? '' : 'h-(--card-height)',
         sizeClasses[size],
         className,
       )}
@@ -296,18 +299,20 @@ export const UserCard = ({
             ref={hashtagContainerRef}
             className="relative mt-auto flex flex-wrap gap-1 pt-2"
           >
-            {userCard.hashtags.slice(0, maxVisibleCount).map((hashtag, index) => (
-              <HashtagBadge
-                key={`${hashtag.hashtag_id}-${hashtag.tag_name}-${index}`}
-                hashtag={{
-                  hashtagId: hashtag.hashtag_id,
-                  tagName: hashtag.tag_name,
-                  createdAt: new Date().toISOString(),
-                }}
-                variant="soft"
-                color="neutral"
-              />
-            ))}
+            {userCard.hashtags
+              .slice(0, maxVisibleCount)
+              .map((hashtag, index) => (
+                <HashtagBadge
+                  key={`${hashtag.hashtag_id}-${hashtag.tag_name}-${index}`}
+                  hashtag={{
+                    hashtagId: hashtag.hashtag_id,
+                    tagName: hashtag.tag_name,
+                    createdAt: new Date().toISOString(),
+                  }}
+                  variant="soft"
+                  color="neutral"
+                />
+              ))}
             {maxVisibleCount < userCard.hashtags.length && (
               <HashtagTooltip
                 hashtags={userCard.hashtags.map(h => ({
