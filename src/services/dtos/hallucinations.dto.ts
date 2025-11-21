@@ -12,6 +12,7 @@ export interface LoginResponseDto {
   deptName: string
   companyName: string | null
   jobPositionName: string | null
+  profile_image_path: string | null
 }
 
 /**
@@ -25,12 +26,27 @@ export interface HomeResponseDto {
     email: string
     phone: string
     profile_image_path: string | null
+    is_leader: boolean
   }
   my_team_card: TeamCardDto
   my_profile_card: UserCardDto
   trending_hashtags: Array<{
     hashtag_id: number
     tag_name: string
+  }>
+  popular_users: Array<{
+    user_id: number
+    name: string
+    team_name: string
+    org_path: string
+    profile_image_path: string | null
+    view_count: number
+  }>
+  popular_teams: Array<{
+    org_id: number
+    team_name: string
+    org_path: string
+    view_count: number
   }>
 }
 
@@ -159,6 +175,7 @@ export interface PatchUserRequestDto {
   phone: string
   summary: string
   detail: string
+  org_id: number
   hashtags: Array<{
     hashtag_id: number
     tag_name: string

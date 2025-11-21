@@ -28,7 +28,7 @@ export const OrganizationBreadcrumb = ({
       <ul>
         <li>
           <a
-            onClick={() => router.push('/home')}
+            onClick={() => router.push('/')}
             className={clsx('hover:text-primary cursor-pointer')}
           >
             Home

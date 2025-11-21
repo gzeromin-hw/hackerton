@@ -35,10 +35,10 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
     <form
       onSubmit={handleSubmit}
       className={clsx(
-        'w-full max-w-4xl rounded-2xl border px-4 py-1',
-        'flex items-center gap-3 transition-colors',
-        'border-base-300 bg-base-100',
-        'focus-within:border-primary',
+        'w-full max-w-4xl rounded-2xl border-2 px-4 py-1',
+        'flex items-center gap-3 transition-all',
+        'border-base-300 bg-base-100 shadow-sm',
+        'focus-within:border-primary focus-within:shadow-md',
       )}
     >
       <textarea

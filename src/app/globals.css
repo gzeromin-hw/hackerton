@@ -100,5 +100,6 @@ body {
 }
 
 :root {
-  --card-height: 19rem;
+  --home-panel-height: 18rem;
+  --card-height: 18rem;
 }

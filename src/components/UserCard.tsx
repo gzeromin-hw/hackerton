@@ -6,6 +6,7 @@ import clsx from 'clsx'
 import type { UserCardDto } from '@/services/dtos/common.dto'
 import { HashtagBadge } from './HashtagBadge'
 import { HashtagTooltip } from './HashtagTooltip'
+import { EditButton } from './EditButton'
 
 export interface UserCardProps {
   /** 사용자 카드 정보 */
@@ -44,8 +45,8 @@ export const UserCard = ({
     }
   }
 
-  const handleEditClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
+  const handleEditClick = (e?: React.MouseEvent) => {
+    e?.stopPropagation()
     router.push(`/home/user?id=${userCard.user_id}&edit=true`)
   }
 
@@ -241,7 +242,7 @@ export const UserCard = ({
               {userCard.is_leader && (
                 <span
                   className={clsx(
-                    'badge badge-sm badge-neutral',
+                    'badge badge-sm badge-neutral text-xs',
                     textSizeClasses[size],
                   )}
                 >
@@ -249,12 +250,12 @@ export const UserCard = ({
                 </span>
               )}
               {userCard.can_edit && (
-                <button
+                <EditButton
                   onClick={handleEditClick}
-                  className={clsx('btn btn-accent btn-xs', 'shrink-0')}
-                >
-                  수정하기
-                </button>
+                  size="xs"
+                  variant="accent"
+                  className={clsx('shrink-0')}
+                />
               )}
             </div>
           </div>
@@ -295,9 +296,9 @@ export const UserCard = ({
             ref={hashtagContainerRef}
             className="relative mt-auto flex flex-wrap gap-1 pt-2"
           >
-            {userCard.hashtags.slice(0, maxVisibleCount).map(hashtag => (
+            {userCard.hashtags.slice(0, maxVisibleCount).map((hashtag, index) => (
               <HashtagBadge
-                key={hashtag.hashtag_id}
+                key={`${hashtag.hashtag_id}-${hashtag.tag_name}-${index}`}
                 hashtag={{
                   hashtagId: hashtag.hashtag_id,
                   tagName: hashtag.tag_name,

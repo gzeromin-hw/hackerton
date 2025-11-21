@@ -17,7 +17,14 @@ interface Message {
 
 export default function SidebarPage() {
   const router = useRouter()
-  const [messages, setMessages] = useState<Message[]>([])
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: 'initial-greeting',
+      sender: 'assistant',
+      message: '안녕하세요!😊 어떤 업무 담당자를 찾고 계신가요?',
+      timestamp: new Date(),
+    },
+  ])
   const [inputMessage, setInputMessage] = useState('')
   const { cleverseAuth } = useAuthStore()
   const { isLoading, setIsLoading } = useHomeStore()
@@ -299,7 +306,7 @@ export default function SidebarPage() {
                 msg.sender === 'user' ? 'text-right' : 'text-left',
               )}
             >
-              {msg.sender}
+              {msg.sender === 'user' ? '나' : '롤티메이트'}
             </div>
             <div
               className={clsx(

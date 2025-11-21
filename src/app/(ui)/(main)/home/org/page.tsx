@@ -5,6 +5,8 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { UserCard } from '@/components/UserCard'
 import { OrganizationBreadcrumb } from '@/components/OrganizationBreadcrumb'
 import { HashtagBadge } from '@/components/HashtagBadge'
+import { HashtagTooltip } from '@/components/HashtagTooltip'
+import { EditButton } from '@/components/EditButton'
 import type { Organization } from '@/types/organization'
 import type { Hashtag } from '@/types/hashtag'
 import type { UserCardDto } from '@/services/dtos/common.dto'
@@ -103,12 +105,22 @@ function OrgDetailContent() {
 
       if (typeof item === 'string') {
         tagName = item
+        // tagName 기반 고유 ID 생성
+        hashtagId =
+          tagName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) +
+          index
       } else if (typeof item === 'object' && item !== null) {
         tagName =
           (item as { tag_name?: string }).tag_name ||
           (item as { tagName?: string }).tagName ||
           ''
-        hashtagId = (item as { hashtag_id?: number }).hashtag_id || index + 1
+        hashtagId =
+          (item as { hashtag_id?: number }).hashtag_id ||
+          (tagName
+            ? tagName
+                .split('')
+                .reduce((acc, char) => acc + char.charCodeAt(0), 0) + index
+            : index + 1)
       }
 
       return {
@@ -129,6 +141,7 @@ function OrgDetailContent() {
       hashtags: member.hashtags,
       is_leader: member.user_id === teamData?.team?.leader?.user_id || false,
       can_edit: teamData?.can_edit || false,
+      profile_image_path: member.profile_image_path || null,
     })) || []
 
   const handleEdit = () => {
@@ -265,12 +278,7 @@ function OrgDetailContent() {
                   </button>
                 </>
               ) : (
-                <button
-                  onClick={handleEdit}
-                  className={clsx('btn btn-neutral btn-sm')}
-                >
-                  수정하기
-                </button>
+                <EditButton onClick={handleEdit} size="sm" variant="neutral" />
               )}
             </div>
           )}
@@ -280,7 +288,7 @@ function OrgDetailContent() {
         <section
           className={clsx(
             'card bg-base-100 border-base-300 border p-6',
-            'flex flex-row items-start justify-between gap-6',
+            'flex flex-row items-start justify-between gap-10',
           )}
         >
           <div className={clsx('flex items-center gap-6')}>
@@ -312,7 +320,7 @@ function OrgDetailContent() {
             {/* 기본 정보 */}
             <div className={clsx('flex-1')}>
               <div className={clsx('mb-4 flex items-center gap-3')}>
-                <h1 className={clsx('text-3xl font-bold')}>
+                <h1 className={clsx('shrink-0 text-3xl font-bold')}>
                   {organization.orgName}
                 </h1>
               </div>
@@ -334,14 +342,15 @@ function OrgDetailContent() {
               >
                 카테고리
               </h3>
-              <div className={clsx('flex flex-wrap gap-2')}>
-                {hashtags.map(hashtag => (
+              <div className={clsx('relative flex flex-wrap gap-2')}>
+                {hashtags.slice(0, 5).map(hashtag => (
                   <HashtagBadge
                     key={hashtag.hashtagId}
                     hashtag={hashtag}
-                    color="primary"
+                    color="neutral"
                   />
                 ))}
+                <HashtagTooltip hashtags={hashtags} maxCount={5} />
               </div>
             </div>
           )}

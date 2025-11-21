@@ -52,6 +52,7 @@ export default function LoginPage() {
           deptName: loginData.deptName,
           companyName: loginData.companyName || undefined,
           jobPositionName: loginData.jobPositionName || undefined,
+          profileImagePath: loginData.profile_image_path || undefined,
         },
       })
       showToast('로그인 성공! 사용자 정보가 저장되었습니다.', 'success')
@@ -114,7 +115,7 @@ export default function LoginPage() {
         <div className="space-y-4">
           <div className="form-control">
             <label htmlFor="ssoId" className="label">
-              <span className="label-text">SSO ID</span>
+              <span className="label-text">ID</span>
             </label>
             <input
               id="ssoId"

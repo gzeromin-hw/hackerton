@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/data/authStore'
 import { ChatInput } from '@/components/ChatInput'
 import { TrendingSearchPanel } from '@/components/TrendingSearchPanel'
+import { PopularUsersPanel } from '@/components/PopularUsersPanel'
+import { PopularTeamsPanel } from '@/components/PopularTeamsPanel'
 import { UserCard } from '@/components/UserCard'
 import { OrganizationCard } from '@/components/OrganizationCard'
 import type { UserCardDto, TeamCardDto } from '@/services/dtos/common.dto'
@@ -88,10 +90,11 @@ export default function MainPage() {
     <div
       className={clsx(
         'bg-base-100 min-h-screen',
-        'flex flex-col items-center justify-center',
+        'flex flex-col items-center',
+        'py-28',
       )}
     >
-      <div className="flex w-full flex-col items-center gap-5">
+      <div className="flex w-full flex-col items-center gap-4">
         <h2
           className={clsx(
             'text-base-content text-4xl font-bold',
@@ -104,31 +107,49 @@ export default function MainPage() {
       </div>
       <div
         className={clsx(
-          'flex flex-nowrap items-stretch justify-center gap-4',
-          'mt-16 w-full max-w-6xl overflow-x-auto px-4',
+          'flex flex-nowrap items-stretch justify-center gap-5',
+          'mt-8 w-full max-w-6xl px-4',
         )}
       >
         {/* Section 1 실시간 검색어 나타내주는 패널 */}
         <TrendingSearchPanel
-          className="w-1/5"
+          className="w-1/3"
           maxItems={5}
           trendingHashtags={trendingHashtags}
         />
 
-        {/* Section 2 내 정보 나타내주는 카드 UserCard */}
-        {currentUserCard && (
-          <UserCard className="w-2/5" userCard={currentUserCard} size="md" />
-        )}
+        {/* Section 2 인기 급상승 임직원 패널 */}
+        <PopularUsersPanel
+          popularUsers={homeData?.popular_users}
+          className="w-1/3"
+        />
 
-        {/* Section 3 팀 정보 나타내주는 카드 OrganizationCard */}
-        {currentTeamCard && (
-          <OrganizationCard
-            className="w-2/5"
-            teamCard={currentTeamCard}
-            size="md"
-          />
-        )}
+        {/* Section 3 인기 급상승 팀 패널 */}
+        <PopularTeamsPanel
+          popularTeams={homeData?.popular_teams}
+          className="w-1/3"
+        />
       </div>
+      {(currentUserCard || currentTeamCard) && (
+        <div
+          className={clsx(
+            'mt-2 w-full max-w-6xl px-4',
+            'flex flex-col gap-4',
+            'md:flex-row',
+          )}
+        >
+          {currentUserCard && (
+            <div className="w-full md:w-1/2">
+              <UserCard userCard={currentUserCard} />
+            </div>
+          )}
+          {currentTeamCard && (
+            <div className="w-full md:w-1/2">
+              <OrganizationCard teamCard={currentTeamCard} />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

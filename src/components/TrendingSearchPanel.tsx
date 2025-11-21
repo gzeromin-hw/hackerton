@@ -135,18 +135,18 @@ export const TrendingSearchPanel = ({
       className={clsx(
         'card bg-base-100 border-base-300 border shadow-md',
         'flex min-w-[280px] flex-col p-4',
-        'h-(--card-height)',
+        'h-(--home-panel-height)',
         className,
       )}
     >
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-3 flex shrink-0 items-center justify-between">
         <h3 className="text-base-content text-base font-semibold">
           실시간 검색어
         </h3>
         {isLoading && <span className="loading loading-spinner loading-xs" />}
       </div>
 
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
         {isLoading && keywords.length === 0 ? (
           <div className="text-base-content/60 flex flex-1 items-center justify-center py-4 text-center text-sm">
             검색어를 불러오는 중...
@@ -156,7 +156,7 @@ export const TrendingSearchPanel = ({
             검색어가 없습니다
           </div>
         ) : (
-          <ul className="flex-1 space-y-2">
+          <ul className="flex-1 space-y-2 overflow-y-auto">
             {keywords.map(item => (
               <li
                 key={item.rank}

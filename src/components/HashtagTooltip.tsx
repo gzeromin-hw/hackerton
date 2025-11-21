@@ -40,7 +40,7 @@ export const HashtagTooltip = ({
       {showTooltip && (
         <div
           className={clsx(
-            'absolute bottom-full left-0 z-50 mb-2',
+            'absolute top-full left-0 z-50 mt-2',
             'rounded-lg border border-neutral-700 bg-neutral-800',
             'max-w-[300px] min-w-[200px] p-2 shadow-lg',
             'flex flex-wrap gap-1',
@@ -48,9 +48,9 @@ export const HashtagTooltip = ({
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
         >
-          {remainingHashtags.map(hashtag => (
+          {remainingHashtags.map((hashtag, index) => (
             <HashtagBadge
-              key={hashtag.hashtagId}
+              key={`${hashtag.hashtagId}-${hashtag.tagName}-${index}`}
               hashtag={hashtag}
               className="border-neutral-600 bg-neutral-700 text-neutral-100"
             />

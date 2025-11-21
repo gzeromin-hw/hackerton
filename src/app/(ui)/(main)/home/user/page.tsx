@@ -4,6 +4,8 @@ import { Suspense, useEffect, useState, useRef } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { OrganizationBreadcrumb } from '@/components/OrganizationBreadcrumb'
 import { HashtagBadge } from '@/components/HashtagBadge'
+import { HashtagTooltip } from '@/components/HashtagTooltip'
+import { EditButton } from '@/components/EditButton'
 import type { User, UserResponsibility } from '@/types/user'
 import type { Organization } from '@/types/organization'
 import type { Hashtag } from '@/types/hashtag'
@@ -22,6 +24,7 @@ function UserDetailContent() {
   const [organizations, setOrganizations] = useState<Organization[]>([])
   const [hashtags, setHashtags] = useState<Hashtag[]>([])
   const [availableHashtags, setAvailableHashtags] = useState<Hashtag[]>([])
+  const [orgId, setOrgId] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [canEdit, setCanEdit] = useState(false)
@@ -90,6 +93,9 @@ function UserDetailContent() {
         // can_edit 값 저장
         setCanEdit(response.can_edit || false)
 
+        // organization.org_id 저장
+        setOrgId(response.organization.org_id)
+
         // User 타입으로 변환
         const userData: User = {
           userId: response.user.user_id,
@@ -157,13 +163,23 @@ function UserDetailContent() {
 
           if (typeof item === 'string') {
             tagName = item
+            // tagName 기반 고유 ID 생성
+            hashtagId =
+              tagName
+                .split('')
+                .reduce((acc, char) => acc + char.charCodeAt(0), 0) + index
           } else if (typeof item === 'object' && item !== null) {
             tagName =
               (item as { tag_name?: string }).tag_name ||
               (item as { tagName?: string }).tagName ||
               ''
             hashtagId =
-              (item as { hashtag_id?: number }).hashtag_id || index + 1
+              (item as { hashtag_id?: number }).hashtag_id ||
+              (tagName
+                ? tagName
+                    .split('')
+                    .reduce((acc, char) => acc + char.charCodeAt(0), 0) + index
+                : index + 1)
           }
 
           return {
@@ -258,7 +274,7 @@ function UserDetailContent() {
   }
 
   const handleSave = async () => {
-    if (!userId) return
+    if (!userId || !orgId) return
 
     try {
       setIsSaving(true)
@@ -309,6 +325,7 @@ function UserDetailContent() {
         phone: editPhone,
         summary: editSummary,
         detail: editDetail,
+        org_id: orgId,
         hashtags: hashtagsPayload,
       })
 
@@ -340,7 +357,13 @@ function UserDetailContent() {
       setUserResponsibility(updatedResponsibility)
 
       const updatedHashtags: Hashtag[] = response.hashtags.map((h, index) => ({
-        hashtagId: h.hashtag_id || index + 1,
+        hashtagId:
+          h.hashtag_id ||
+          (h.tag_name
+            ? h.tag_name
+                .split('')
+                .reduce((acc, char) => acc + char.charCodeAt(0), 0) + index
+            : index + 1),
         tagName: h.tag_name,
         createdAt: new Date().toISOString(),
       }))
@@ -450,12 +473,7 @@ function UserDetailContent() {
                   </button>
                 </>
               ) : (
-                <button
-                  onClick={handleEdit}
-                  className={clsx('btn btn-neutral btn-sm')}
-                >
-                  수정하기
-                </button>
+                <EditButton onClick={handleEdit} size="sm" variant="neutral" />
               )}
             </div>
           )}
@@ -493,7 +511,9 @@ function UserDetailContent() {
               <div className={clsx('mb-4 flex items-center gap-3')}>
                 <h1 className={clsx('text-3xl font-bold')}>{user.name}</h1>
                 {user.isLeader && (
-                  <span className="badge badge-sm badge-neutral">팀장</span>
+                  <span className="badge badge-sm badge-neutral text-xs">
+                    팀장
+                  </span>
                 )}
               </div>
 
@@ -538,7 +558,7 @@ function UserDetailContent() {
                         <div
                           key={tagName}
                           className={clsx(
-                            'badge badge-primary badge-sm flex items-center gap-1',
+                            'badge badge-neutral badge-sm flex items-center gap-1',
                           )}
                         >
                           #{tagName}
@@ -649,14 +669,15 @@ function UserDetailContent() {
                   </div>
                 </div>
               ) : (
-                <div className={clsx('flex flex-wrap gap-2')}>
-                  {hashtags.map(hashtag => (
+                <div className={clsx('relative flex flex-wrap gap-2')}>
+                  {hashtags.slice(0, 5).map(hashtag => (
                     <HashtagBadge
                       key={hashtag.hashtagId}
                       hashtag={hashtag}
-                      color="primary"
+                      color="neutral"
                     />
                   ))}
+                  <HashtagTooltip hashtags={hashtags} maxCount={5} />
                 </div>
               )}
             </div>

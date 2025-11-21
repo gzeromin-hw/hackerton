@@ -10,6 +10,7 @@ interface CleverseUser {
   deptName?: string
   companyName?: string
   jobPositionName?: string
+  profileImagePath?: string | null
   [key: string]: unknown
 }
 

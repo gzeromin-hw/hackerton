@@ -61,11 +61,12 @@ export default function Header() {
               className="avatar cursor-pointer"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              <div className="mask mask-heart w-9">
+              <div className="w-9 rounded-full">
                 <img
                   src={
-                    user.profileImage && typeof user.profileImage === 'string'
-                      ? user.profileImage
+                    user.profileImagePath &&
+                    typeof user.profileImagePath === 'string'
+                      ? user.profileImagePath
                       : 'https://img.daisyui.com/images/profile/demo/yellingcat@192.webp'
                   }
                   alt={user.userName || 'User'}

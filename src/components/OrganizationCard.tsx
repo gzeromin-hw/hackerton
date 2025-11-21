@@ -5,6 +5,7 @@ import clsx from 'clsx'
 import type { TeamCardDto } from '@/services/dtos/common.dto'
 import { HashtagBadge } from './HashtagBadge'
 import { HashtagTooltip } from './HashtagTooltip'
+import { EditButton } from './EditButton'
 import { useAuthStore } from '@/data/authStore'
 
 export interface OrganizationCardProps {
@@ -45,8 +46,8 @@ export const OrganizationCard = ({
     }
   }
 
-  const handleEditClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
+  const handleEditClick = (e?: React.MouseEvent) => {
+    e?.stopPropagation()
     router.push(`/home/org?id=${teamCard.org_id}&edit=true`)
   }
   const sizeClasses = {
@@ -117,12 +118,12 @@ export const OrganizationCard = ({
               {teamCard.team_name}
             </h3>
             {canEdit && (
-              <button
+              <EditButton
                 onClick={handleEditClick}
-                className={clsx('btn btn-accent btn-xs', 'shrink-0')}
-              >
-                수정하기
-              </button>
+                size="xs"
+                variant="accent"
+                className={clsx('shrink-0')}
+              />
             )}
           </div>
         </div>
@@ -147,9 +148,9 @@ export const OrganizationCard = ({
         {/* 카테고리(해시태그) */}
         {teamCard.hashtags && teamCard.hashtags.length > 0 && (
           <div className="relative mt-auto flex flex-wrap gap-1 pt-2">
-            {teamCard.hashtags.slice(0, 5).map(hashtag => (
+            {teamCard.hashtags.slice(0, 5).map((hashtag, index) => (
               <HashtagBadge
-                key={hashtag.hashtag_id}
+                key={`${hashtag.hashtag_id}-${hashtag.tag_name}-${index}`}
                 hashtag={{
                   hashtagId: hashtag.hashtag_id,
                   tagName: hashtag.tag_name,
