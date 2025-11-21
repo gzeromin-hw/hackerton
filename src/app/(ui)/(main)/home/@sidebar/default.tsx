@@ -26,6 +26,7 @@ export default function SidebarPage() {
     },
   ])
   const [inputMessage, setInputMessage] = useState('')
+  const [isComposing, setIsComposing] = useState(false)
   const { cleverseAuth } = useAuthStore()
   const { isLoading, setIsLoading } = useHomeStore()
   const { question } = useChatStore()
@@ -39,7 +40,7 @@ export default function SidebarPage() {
   const prevClientHeightRef = useRef(0)
 
   const handleSend = async () => {
-    if (!inputMessage.trim()) return
+    if (!inputMessage.trim() || isComposing) return
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -324,23 +325,71 @@ export default function SidebarPage() {
       </div>
 
       <div className="bg-base-100 p-4">
-        <div className="flex gap-2">
-          <input
-            type="text"
+        <form
+          onSubmit={e => {
+            e.preventDefault()
+            handleSend()
+          }}
+          className={clsx(
+            'w-full rounded-2xl border-2 px-4 py-1',
+            'flex items-center gap-3 transition-all',
+            'border-base-300 bg-base-100 shadow-sm',
+            'focus-within:border-primary focus-within:shadow-md',
+          )}
+        >
+          <textarea
             value={inputMessage}
             onChange={e => setInputMessage(e.target.value)}
-            onKeyPress={e => e.key === 'Enter' && handleSend()}
-            placeholder="메시지 입력..."
-            className="input input-bordered input-sm flex-1"
+            onKeyDown={e => {
+              if (isComposing) return
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault()
+                handleSend()
+              }
+            }}
+            onCompositionStart={() => setIsComposing(true)}
+            onCompositionEnd={e => {
+              setIsComposing(false)
+              setInputMessage(e.currentTarget.value)
+            }}
+            placeholder="메시지를 입력하세요..."
+            rows={1}
+            className={clsx(
+              'textarea textarea-ghost flex-1 resize-none',
+              'text-base-content placeholder-base-content/60',
+              'min-h-0 border-none bg-transparent text-base',
+              'focus:bg-transparent focus:outline-none',
+            )}
           />
           <button
-            className="btn btn-primary btn-sm"
-            onClick={handleSend}
-            disabled={isLoading}
+            type="submit"
+            className={clsx(
+              'btn btn-primary btn-sm rounded-full',
+              'h-8 min-h-0 w-8 p-0',
+              'flex items-center justify-center',
+              'disabled:opacity-50',
+            )}
+            disabled={!inputMessage.trim() || isLoading}
           >
-            {isLoading ? '전송 중...' : '전송'}
+            {isLoading ? (
+              <span className="loading loading-spinner loading-xs" />
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-4 w-4"
+              >
+                <path d="M22 2L11 13" />
+                <path d="M22 2l-7 20-4-9-9-4 20-7z" />
+              </svg>
+            )}
           </button>
-        </div>
+        </form>
       </div>
     </aside>
   )
