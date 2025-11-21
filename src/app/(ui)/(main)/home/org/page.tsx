@@ -291,7 +291,7 @@ function OrgDetailContent() {
             'flex flex-row items-start justify-between gap-10',
           )}
         >
-          <div className={clsx('flex items-center gap-6')}>
+          <div className={clsx('flex w-1/2 flex-col items-center gap-4')}>
             {/* 조직 아이콘 */}
             <div className="avatar">
               <div
@@ -317,22 +317,10 @@ function OrgDetailContent() {
               </div>
             </div>
 
-            {/* 기본 정보 */}
-            <div className={clsx('flex-1')}>
-              <div className={clsx('mb-4 flex items-center gap-3')}>
-                <h1 className={clsx('shrink-0 text-3xl font-bold')}>
-                  {organization.orgName}
-                </h1>
-              </div>
-
-              {/* 조직 코드 */}
-              <div className={clsx('space-y-2')}>
-                <div className={clsx('flex items-center gap-2')}>
-                  <span className={clsx('text-base-content/70')}>🏢</span>
-                  <span>{organization.orgCode}</span>
-                </div>
-              </div>
-            </div>
+            {/* 조직명 */}
+            <h1 className={clsx('text-3xl font-bold')}>
+              {organization.orgName}
+            </h1>
           </div>
           {/* 카테고리 */}
           {hashtags && hashtags.length > 0 && (
