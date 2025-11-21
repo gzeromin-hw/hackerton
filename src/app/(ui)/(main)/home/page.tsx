@@ -5,14 +5,38 @@ import { OrganizationCard } from '@/components/OrganizationCard'
 import type { UserCardDto, TeamCardDto } from '@/services/dtos/common.dto'
 import useHomeStore from '@/data/homeStore'
 import clsx from 'clsx'
+import { useState, useEffect } from 'react'
+
+const ITEMS_PER_PAGE = 6
 
 export default function Home() {
   const { cardResult, isLoading } = useHomeStore()
+  const [userCardsVisible, setUserCardsVisible] = useState(ITEMS_PER_PAGE)
+  const [teamCardsVisible, setTeamCardsVisible] = useState(ITEMS_PER_PAGE)
+
+  useEffect(() => {
+    setUserCardsVisible(ITEMS_PER_PAGE)
+    setTeamCardsVisible(ITEMS_PER_PAGE)
+  }, [cardResult])
 
   const displayUserCards: UserCardDto[] = cardResult ? cardResult.userCards : []
   const displayTeamCards: TeamCardDto[] = cardResult ? cardResult.teamCards : []
 
   const hasResults = displayUserCards.length > 0 || displayTeamCards.length > 0
+
+  const visibleUserCards = displayUserCards.slice(0, userCardsVisible)
+  const visibleTeamCards = displayTeamCards.slice(0, teamCardsVisible)
+
+  const hasMoreUserCards = displayUserCards.length > userCardsVisible
+  const hasMoreTeamCards = displayTeamCards.length > teamCardsVisible
+
+  const handleLoadMoreUsers = () => {
+    setUserCardsVisible(prev => prev + ITEMS_PER_PAGE)
+  }
+
+  const handleLoadMoreTeams = () => {
+    setTeamCardsVisible(prev => prev + ITEMS_PER_PAGE)
+  }
 
   return (
     <div className={clsx('bg-base-100 min-h-screen p-6')}>
@@ -67,39 +91,69 @@ export default function Home() {
           <>
             {/* 사용자 리스트 섹션 */}
             {displayUserCards.length > 0 && (
-              <section
-                className={clsx(
-                  'my-4 text-2xl font-bold',
-                  'grid grid-cols-1 gap-4',
-                  'md:grid-cols-2 lg:grid-cols-3',
+              <section className={clsx('my-4 space-y-4')}>
+                <h2 className={clsx('text-2xl font-bold')}>사용자</h2>
+                <div
+                  className={clsx(
+                    'grid grid-cols-1 gap-4',
+                    'md:grid-cols-2 lg:grid-cols-3',
+                  )}
+                >
+                  {visibleUserCards.map((userCard, index) => (
+                    <UserCard
+                      key={`user-${userCard.user_id}-${index}`}
+                      userCard={userCard}
+                      size="md"
+                    />
+                  ))}
+                </div>
+                {hasMoreUserCards && (
+                  <div className={clsx('flex justify-center pt-4')}>
+                    <button
+                      onClick={handleLoadMoreUsers}
+                      className={clsx(
+                        'btn btn-outline btn-primary',
+                        'min-w-32',
+                      )}
+                    >
+                      더보기
+                    </button>
+                  </div>
                 )}
-              >
-                {displayUserCards.map((userCard, index) => (
-                  <UserCard
-                    key={`user-${userCard.user_id}-${index}`}
-                    userCard={userCard}
-                    size="md"
-                  />
-                ))}
               </section>
             )}
 
             {/* 조직 리스트 섹션 */}
             {displayTeamCards.length > 0 && (
-              <section
-                className={clsx(
-                  'my-4 text-2xl font-bold',
-                  'grid grid-cols-1 gap-4',
-                  'lg:grid-cols-2 2xl:grid-cols-3',
+              <section className={clsx('my-4 space-y-4')}>
+                <h2 className={clsx('text-2xl font-bold')}>조직</h2>
+                <div
+                  className={clsx(
+                    'grid grid-cols-1 gap-4',
+                    'lg:grid-cols-2 2xl:grid-cols-3',
+                  )}
+                >
+                  {visibleTeamCards.map(teamCard => (
+                    <OrganizationCard
+                      key={teamCard.org_id}
+                      teamCard={teamCard}
+                      size="md"
+                    />
+                  ))}
+                </div>
+                {hasMoreTeamCards && (
+                  <div className={clsx('flex justify-center pt-4')}>
+                    <button
+                      onClick={handleLoadMoreTeams}
+                      className={clsx(
+                        'btn btn-outline btn-primary',
+                        'min-w-32',
+                      )}
+                    >
+                      더보기
+                    </button>
+                  </div>
                 )}
-              >
-                {displayTeamCards.map(teamCard => (
-                  <OrganizationCard
-                    key={teamCard.org_id}
-                    teamCard={teamCard}
-                    size="md"
-                  />
-                ))}
               </section>
             )}
           </>
