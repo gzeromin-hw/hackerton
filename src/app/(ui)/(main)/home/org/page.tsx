@@ -106,21 +106,33 @@ function OrgDetailContent() {
       if (typeof item === 'string') {
         tagName = item
         // tagName 기반 고유 ID 생성
-        hashtagId =
-          tagName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) +
-          index
+        const hashValue = tagName
+          .split('')
+          .reduce(
+            (acc, char, idx) =>
+              acc + char.charCodeAt(0) * Math.pow(31, idx + 1),
+            0,
+          )
+        hashtagId = hashValue + index * 1000000
       } else if (typeof item === 'object' && item !== null) {
         tagName =
           (item as { tag_name?: string }).tag_name ||
           (item as { tagName?: string }).tagName ||
           ''
-        hashtagId =
-          (item as { hashtag_id?: number }).hashtag_id ||
-          (tagName
-            ? tagName
-                .split('')
-                .reduce((acc, char) => acc + char.charCodeAt(0), 0) + index
-            : index + 1)
+        // 서버에서 제공하는 hashtag_id가 있으면 우선 사용
+        if ((item as { hashtag_id?: number }).hashtag_id) {
+          hashtagId = (item as { hashtag_id?: number }).hashtag_id!
+        } else if (tagName) {
+          // tagName 기반 고유 ID 생성
+          const hashValue = tagName
+            .split('')
+            .reduce(
+              (acc, char, idx) =>
+                acc + char.charCodeAt(0) * Math.pow(31, idx + 1),
+              0,
+            )
+          hashtagId = hashValue + index * 1000000
+        }
       }
 
       return {
@@ -331,9 +343,9 @@ function OrgDetailContent() {
                 카테고리
               </h3>
               <div className={clsx('relative flex flex-wrap gap-2')}>
-                {hashtags.slice(0, 5).map(hashtag => (
+                {hashtags.slice(0, 5).map((hashtag, index) => (
                   <HashtagBadge
-                    key={hashtag.hashtagId}
+                    key={`badge-${hashtag.tagName}-${hashtag.hashtagId}-${index}`}
                     hashtag={hashtag}
                     color="neutral"
                   />
@@ -400,9 +412,9 @@ function OrgDetailContent() {
                 'md:grid-cols-2 lg:grid-cols-3',
               )}
             >
-              {teamMemberCards.map(memberCard => (
+              {teamMemberCards.map((memberCard, index) => (
                 <UserCard
-                  key={memberCard.user_id}
+                  key={`member-${memberCard.user_id}-${index}`}
                   userCard={memberCard}
                   size="md"
                 />

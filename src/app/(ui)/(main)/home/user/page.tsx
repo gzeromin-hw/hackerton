@@ -163,23 +163,35 @@ function UserDetailContent() {
 
           if (typeof item === 'string') {
             tagName = item
-            // tagName 기반 고유 ID 생성
-            hashtagId =
-              tagName
-                .split('')
-                .reduce((acc, char) => acc + char.charCodeAt(0), 0) + index
+            // 서버에서 제공하는 ID가 없으므로 tagName 기반 고유 ID 생성
+            // tagName + index를 조합하여 완전히 고유한 값 생성
+            const hashValue = tagName
+              .split('')
+              .reduce(
+                (acc, char, idx) =>
+                  acc + char.charCodeAt(0) * Math.pow(31, idx + 1),
+                0,
+              )
+            hashtagId = hashValue + index * 1000000
           } else if (typeof item === 'object' && item !== null) {
             tagName =
               (item as { tag_name?: string }).tag_name ||
               (item as { tagName?: string }).tagName ||
               ''
-            hashtagId =
-              (item as { hashtag_id?: number }).hashtag_id ||
-              (tagName
-                ? tagName
-                    .split('')
-                    .reduce((acc, char) => acc + char.charCodeAt(0), 0) + index
-                : index + 1)
+            // 서버에서 제공하는 hashtag_id가 있으면 우선 사용
+            if ((item as { hashtag_id?: number }).hashtag_id) {
+              hashtagId = (item as { hashtag_id?: number }).hashtag_id!
+            } else if (tagName) {
+              // tagName 기반 고유 ID 생성
+              const hashValue = tagName
+                .split('')
+                .reduce(
+                  (acc, char, idx) =>
+                    acc + char.charCodeAt(0) * Math.pow(31, idx + 1),
+                  0,
+                )
+              hashtagId = hashValue + index * 1000000
+            }
           }
 
           return {
@@ -356,17 +368,27 @@ function UserDetailContent() {
       }
       setUserResponsibility(updatedResponsibility)
 
-      const updatedHashtags: Hashtag[] = response.hashtags.map((h, index) => ({
-        hashtagId:
-          h.hashtag_id ||
-          (h.tag_name
-            ? h.tag_name
-                .split('')
-                .reduce((acc, char) => acc + char.charCodeAt(0), 0) + index
-            : index + 1),
-        tagName: h.tag_name,
-        createdAt: new Date().toISOString(),
-      }))
+      const updatedHashtags: Hashtag[] = response.hashtags.map((h, index) => {
+        let hashtagId = index + 1
+        if (h.hashtag_id) {
+          hashtagId = h.hashtag_id
+        } else if (h.tag_name) {
+          // tagName 기반 고유 ID 생성
+          const hashValue = h.tag_name
+            .split('')
+            .reduce(
+              (acc, char, idx) =>
+                acc + char.charCodeAt(0) * Math.pow(31, idx + 1),
+              0,
+            )
+          hashtagId = hashValue + index * 1000000
+        }
+        return {
+          hashtagId,
+          tagName: h.tag_name,
+          createdAt: new Date().toISOString(),
+        }
+      })
       setHashtags(updatedHashtags)
 
       // 수정 모드용 상태도 응답 데이터로 업데이트
@@ -613,9 +635,9 @@ function UserDetailContent() {
                         >
                           {availableHashtags
                             .filter(h => !editHashtags.includes(h.tagName))
-                            .map(hashtag => (
+                            .map((hashtag, index) => (
                               <button
-                                key={hashtag.hashtagId}
+                                key={`dropdown-${hashtag.tagName}-${hashtag.hashtagId}-${index}`}
                                 type="button"
                                 onClick={() =>
                                   handleSelectHashtag(hashtag.tagName)
@@ -670,9 +692,9 @@ function UserDetailContent() {
                 </div>
               ) : (
                 <div className={clsx('relative flex flex-wrap gap-2')}>
-                  {hashtags.slice(0, 5).map(hashtag => (
+                  {hashtags.slice(0, 5).map((hashtag, index) => (
                     <HashtagBadge
-                      key={hashtag.hashtagId}
+                      key={`badge-${hashtag.tagName}-${hashtag.hashtagId}-${index}`}
                       hashtag={hashtag}
                       color="neutral"
                     />

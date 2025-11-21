@@ -74,9 +74,9 @@ export default function Home() {
                   'md:grid-cols-2 lg:grid-cols-3',
                 )}
               >
-                {displayUserCards.map(userCard => (
+                {displayUserCards.map((userCard, index) => (
                   <UserCard
-                    key={userCard.user_id}
+                    key={`user-${userCard.user_id}-${index}`}
                     userCard={userCard}
                     size="md"
                   />
