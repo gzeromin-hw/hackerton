@@ -331,7 +331,7 @@ export default function SidebarPage() {
             handleSend()
           }}
           className={clsx(
-            'w-full rounded-2xl border-2 px-4 py-1',
+            'w-full rounded-2xl border px-4 py-1',
             'flex items-center gap-3 transition-all',
             'border-base-300 bg-base-100 shadow-sm',
             'focus-within:border-primary focus-within:shadow-md',

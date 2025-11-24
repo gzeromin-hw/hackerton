@@ -54,6 +54,8 @@ const sampleUserCard: UserCardDto = {
   summary: sampleSummary,
   hashtags: sampleHashtags,
   is_leader: false,
+  can_edit: false,
+  profile_image_path: null,
 }
 
 const sampleUserCardWithImage: UserCardDto = {

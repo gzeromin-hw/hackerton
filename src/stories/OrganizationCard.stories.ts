@@ -53,6 +53,9 @@ const sampleTeamCard: TeamCardDto = {
   org_path: '/개발팀',
   summary: '프론트엔드와 백엔드 개발을 담당하는 핵심 개발 조직입니다.',
   hashtags: [],
+  leader_id: 1,
+  leader_name: '홍길동',
+  can_edit: false,
 }
 
 const departmentTeamCard: TeamCardDto = {

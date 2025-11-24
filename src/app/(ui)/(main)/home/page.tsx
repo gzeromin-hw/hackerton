@@ -5,19 +5,70 @@ import { OrganizationCard } from '@/components/OrganizationCard'
 import type { UserCardDto, TeamCardDto } from '@/services/dtos/common.dto'
 import useHomeStore from '@/data/homeStore'
 import clsx from 'clsx'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
-const ITEMS_PER_PAGE = 6
+const ITEMS_PER_PAGE = 9
+
+// 컨텐츠 영역 넓이에 따른 그리드 컬럼 클래스 결정
+const getGridColsClass = (width: number) => {
+  if (width >= 1024) {
+    // xl: 1024px 이상 -> 3열
+    return 'grid-cols-3'
+  } else if (width >= 768) {
+    // lg: 768px 이상 -> 2열
+    return 'grid-cols-2'
+  } else if (width >= 640) {
+    // md: 640px 이상 -> 2열
+    return 'grid-cols-2'
+  } else {
+    // 기본: 1열
+    return 'grid-cols-1'
+  }
+}
 
 export default function Home() {
   const { cardResult, isLoading } = useHomeStore()
   const [userCardsVisible, setUserCardsVisible] = useState(ITEMS_PER_PAGE)
   const [teamCardsVisible, setTeamCardsVisible] = useState(ITEMS_PER_PAGE)
+  const prevCardResultRef = useRef(cardResult)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [gridCols, setGridCols] = useState('grid-cols-1')
 
   useEffect(() => {
-    setUserCardsVisible(ITEMS_PER_PAGE)
-    setTeamCardsVisible(ITEMS_PER_PAGE)
+    if (prevCardResultRef.current !== cardResult) {
+      prevCardResultRef.current = cardResult
+      const timeoutId = setTimeout(() => {
+        setUserCardsVisible(ITEMS_PER_PAGE)
+        setTeamCardsVisible(ITEMS_PER_PAGE)
+      }, 0)
+      return () => clearTimeout(timeoutId)
+    }
   }, [cardResult])
+
+  // 컨텐츠 영역 넓이에 따라 그리드 컬럼 동적 조정
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    const updateGridCols = () => {
+      const width = container.offsetWidth
+      setGridCols(getGridColsClass(width))
+    }
+
+    // 초기 설정
+    updateGridCols()
+
+    // ResizeObserver로 넓이 변경 감지
+    const resizeObserver = new ResizeObserver(() => {
+      updateGridCols()
+    })
+
+    resizeObserver.observe(container)
+
+    return () => {
+      resizeObserver.disconnect()
+    }
+  }, [])
 
   const displayUserCards: UserCardDto[] = cardResult ? cardResult.userCards : []
   const displayTeamCards: TeamCardDto[] = cardResult ? cardResult.teamCards : []
@@ -40,7 +91,7 @@ export default function Home() {
 
   return (
     <div className={clsx('min-h-screen p-6')}>
-      <div className={clsx('mx-auto max-w-7xl space-y-8')}>
+      <div ref={containerRef} className={clsx('mx-auto max-w-7xl space-y-8')}>
         {isLoading ? (
           <div
             className={clsx(
@@ -92,13 +143,8 @@ export default function Home() {
             {/* 사용자 리스트 섹션 */}
             {displayUserCards.length > 0 && (
               <section className={clsx('my-4 space-y-4')}>
-                <h2 className={clsx('text-2xl font-bold')}>사용자</h2>
-                <div
-                  className={clsx(
-                    'grid grid-cols-1 gap-4',
-                    'md:grid-cols-2 lg:grid-cols-3',
-                  )}
-                >
+                <h2 className={clsx('text-2xl font-bold')}>임직원</h2>
+                <div className={clsx('grid gap-4', gridCols)}>
                   {visibleUserCards.map((userCard, index) => (
                     <UserCard
                       key={`user-${userCard.user_id}-${index}`}
@@ -126,13 +172,8 @@ export default function Home() {
             {/* 조직 리스트 섹션 */}
             {displayTeamCards.length > 0 && (
               <section className={clsx('my-4 space-y-4')}>
-                <h2 className={clsx('text-2xl font-bold')}>조직</h2>
-                <div
-                  className={clsx(
-                    'grid grid-cols-1 gap-4',
-                    'lg:grid-cols-2 2xl:grid-cols-3',
-                  )}
-                >
+                <h2 className={clsx('text-2xl font-bold')}>팀</h2>
+                <div className={clsx('grid gap-4', gridCols)}>
                   {visibleTeamCards.map(teamCard => (
                     <OrganizationCard
                       key={teamCard.org_id}

@@ -31,7 +31,7 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     if (!login.ssoId) {
-      showToast('SSO ID를 입력해주세요.', 'warning')
+      showToast('Cleverse ID를 입력해주세요.', 'warning')
       return
     }
 
@@ -188,7 +188,7 @@ export default function LoginPage() {
             <input
               id="ssoId"
               type="text"
-              placeholder="SSO ID를 입력하세요"
+              placeholder="Cleverse ID를 입력하세요"
               value={login.ssoId}
               onChange={e =>
                 setLogin({
